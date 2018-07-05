@@ -7,6 +7,7 @@
  This is a rewrite of ESPrinkler https://github.com/n0bel/ESPrinkler but based
  on the Arduino toolchain instead of ExperssIF.  This should make the project
  more accessable to people.
+  Minor modifications by Lawrie Abbott 2018. lawab@gmail.com
 */
 
 /* Requirements:
@@ -21,31 +22,48 @@
 
   Don't forget to restart the Arduino IDE after installing these things.
 
-
   Set your esp settings.. the board, program method, flash size and spiffs size.
 
   This uses the SPIFFS file system.  So we need to load that in your esp-xx first.
   Upload the contents of the data folder with MkSPIFFS Tool ("ESP8266 Sketch Data Upload" in Tools menu in Arduino IDE)
 
   Then compile and upload the .ino.
+*/
+#define OLED_SCL D1      // D1/GPIO5/SCL to SCL
+#define OLED_SDA D2      // D2/GPIO4/SDA to SDA
+#define masterRelay D6   // D6/GPIO12 - Use external pulldown to avoid startup pulse 
+#define PIN_CLOCK D5     // D5/GPIO14 to SH_CP (pin11 74HC595)
+#define PIN_DATA D7      // D7/GPIO13 to DS (pin14 74HC595) 
+#define PIN_LATCH D8     // D8/GPIO15 to ST_CP (pin12 74HC595)
 
-  */
+#include <U8x8lib.h>
+#include <u8g2.h>
+#include <U8g2lib.h>
+#include <u8x8.h>
 
-// Configurable Options
+
+// ****** Configurable Options ******
 
 // Include code for PCF8563 RTC
 #define INCLUDE_PCF8563
 
 // Include code for DS1307 RTC
-#define INCLUDE_DS1307
+//#define INCLUDE_DS1307
+
+// Set display
+// See https://github.com/olikraus/u8g2/wiki/u8g2setupcpp#constructor-name
+// U8G2_SSD1306_128X64_NONAME_F_HW_I2C(rotation, [reset [, clock, data]])
+U8G2_SSD1306_128X64_NONAME_F_HW_I2C u8g2(U8G2_R0, U8X8_PIN_NONE, OLED_SCL, OLED_SDA);
 
 // Where Do you want to send debug output?
 #define DBG_OUTPUT_PORT Serial
+#define DBG_OUTPUT_PORT_SPEED 115200
 
 // Uncommment if you'd like even more debug information
-// #define EXTRA_DEBUG
+// #define EXTRA_DEBUG  // arduino-1.8.5/libraries/SimpleTimer/SimpleTimer.h:103:40: error: 'void (* SimpleTimer::callbacks [10])()' is private timer_callback callbacks[MAX_TIMERS];
 
-// End of Config
+// ***** End of Config ******
+
 
 #include <ESP8266WiFi.h>
 #include <WiFiClient.h>
@@ -55,14 +73,12 @@
 #include <DNSServer.h>
 #include <TimeLib.h>
 #include <NtpClientLib.h>
-#include <FS.h>
+#include <FS.h>..
 #include <stdarg.h>
 
 #include <ArduinoJson.h>
 #include <string.h>
-#include <U8g2lib.h>
 #include <SimpleTimer.h>
-#include <SPI.h>
 #include <Wire.h>
 #include <EEPROM.h>
 #define EEPROM_SIZE 512
@@ -70,23 +86,22 @@
 #ifdef INCLUDE_PCF8563
 #include <Rtc_Pcf8563.h>
 #endif
-#ifdef INCLUDE_DS1307
+#ifdef INCLUDE_DS1307.
 #include <RtcDS1307.h>
 #endif
 
 #include "./version.h"
 
-U8G2_SH1106_128X64_NONAME_F_HW_I2C u8g2(U8G2_R2, U8X8_PIN_NONE);
-
 #ifdef INCLUDE_PCF8563
 Rtc_Pcf8563 Rtc_Pcf8563;
 #endif
+
 #ifdef INCLUDE_DS1307
 RtcDS1307<TwoWire> Rtc_Ds1307(Wire);
 #endif
 
 const char* configFile = "/config.json";   // The config file name
-const char* schedFile = "/sched.json";   // The sched file name
+const char* schedFile = "/sched.json";   // The sched file name6
 const char* buttonsFile = "/buttons.json";   // The buttons file name
 
 // Note that these are the default values if no /config.json exists,
@@ -598,7 +613,20 @@ void loadSched() {
 
 void setRelays() {
   DBG_OUTPUT_PORT.printf("set relays=%02x\n", relayState);
-  SPI.transfer(relayState);
+
+  // masterRelay comes on whenever any of relays 1 - 8 are active
+  // Using D6 as it is the only PIN available that can be held LOW on startup
+  if (relayState > 0) {
+    digitalWrite(masterRelay, HIGH);
+  } else {
+    digitalWrite(masterRelay, LOW);
+  }
+
+  // Use simple shiftOut instead of SPI to free up D6
+  digitalWrite(PIN_LATCH, LOW);
+  shiftOut(PIN_DATA, PIN_CLOCK, MSBFIRST, relayState);
+  digitalWrite(PIN_LATCH, HIGH);
+
   u8g2.setDrawColor(0);
   u8g2.drawBox(0, 64 - 12, 128, 12);
   for (int i = 0; i < 8; i++) {
@@ -979,18 +1007,25 @@ void eeSave() {
 }
 
 void setup(void) {
+  // Add master relay output to come on whenever
+  // any output relay is on.
+
+  pinMode(masterRelay, OUTPUT);
+  pinMode(PIN_LATCH, OUTPUT);
+  pinMode(PIN_DATA, OUTPUT);
+  pinMode(PIN_CLOCK, OUTPUT);
+  
+  digitalWrite(masterRelay, LOW);
+  
   pinMode(BUILTIN_LED, OUTPUT);
   setBlinker(50);
-
-  SPI.setDataMode(SPI_MODE0);
-  SPI.setBitOrder(MSBFIRST);
-  SPI.setClockDivider(SPI_CLOCK_DIV16);
-  SPI.setHwCs(true);
-  SPI.begin();
-  SPI.transfer(relayState);
+  
+  digitalWrite(PIN_LATCH, LOW);
+  shiftOut(PIN_DATA, PIN_CLOCK, MSBFIRST, relayState);
+  digitalWrite(PIN_LATCH, HIGH);
 
   delay(500);
-  DBG_OUTPUT_PORT.begin(74880);
+  DBG_OUTPUT_PORT.begin(DBG_OUTPUT_PORT_SPEED);
   DBG_OUTPUT_PORT.setDebugOutput(false);
   #ifdef EXTRA_DEBUG
   DBG_OUTPUT_PORT.setDebugOutput(true);
