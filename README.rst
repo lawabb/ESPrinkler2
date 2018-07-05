@@ -3,6 +3,9 @@ ESPrinkler2
 Arduino/ESP8266 based sprinkler Controller.
 -------------------------------------------
 
+The folowing is from n0bel/ESPrinkler2. The code here has some small changes to incorporate a Master Solenoid control.
+See https://youtu.be/FuQVv96XGbQ for a video of my hardware.
+
 .. figure:: images/collage.jpg
    :alt: ESPrinkler2 Collage
 
