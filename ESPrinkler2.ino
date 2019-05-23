@@ -7,7 +7,7 @@
  This is a rewrite of ESPrinkler https://github.com/n0bel/ESPrinkler but based
  on the Arduino toolchain instead of ExperssIF.  This should make the project
  more accessable to people.
-  Minor modifications by Lawrie Abbott 2018. lawab@gmail.com
+  Minor modifications by Lawrie Abbott 2018. lawabb@gmail.com
 */
 
 /* Requirements:
