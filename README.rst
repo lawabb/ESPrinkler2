@@ -1,12 +1,12 @@
 ESPrinkler2
 ===========
 Arduino/ESP8266 based sprinkler Controller.
--  This is a fork of the n0bel/ESPrinkler2 project with some small changes to suit my needs.
--  The main changes are.
--  1. Addition of a Master relay
--  2. Removal of SPI (to regain a sutiable pin for master relay)
--  3. Some redo of main webpage (index.html) for better display on phone
--  4. Inclusions of some hardware info. Working circuit diagram and Main parts list/supplier/prices.
+|  This is a fork of the n0bel/ESPrinkler2 project with some small changes to suit my needs.
+|  The main changes are.
+|  1. Addition of a Master relay
+|  2. Removal of SPI (to regain a sutiable pin for master relay)
+|  3. Some redo of main webpage (index.html) for better display on phone
+|  4. Inclusions of some hardware info. Working circuit diagram and Main parts list/supplier/prices.
 -------------------------------------------
 
 .. figure::  docs/Screenshot_20190603-192318.png
