@@ -7,7 +7,7 @@
  This is a rewrite of ESPrinkler https://github.com/n0bel/ESPrinkler but based
  on the Arduino toolchain instead of ExperssIF.  This should make the project
  more accessable to people.
-  Minor modifications by Lawrie Abbott 2018. lawab@gmail.com
+  Minor modifications by Lawrie Abbott 2018. lawabb@gmail.com
 */
 
 /* Requirements:
@@ -1020,9 +1020,9 @@ void setup(void) {
   pinMode(BUILTIN_LED, OUTPUT);
   setBlinker(50);
   
-  digitalWrite(PIN_LATCH, LOW);
-  shiftOut(PIN_DATA, PIN_CLOCK, MSBFIRST, relayState);
-  digitalWrite(PIN_LATCH, HIGH);
+  // digitalWrite(PIN_LATCH, LOW);
+  // shiftOut(PIN_DATA, PIN_CLOCK, MSBFIRST, relayState);
+  // digitalWrite(PIN_LATCH, HIGH);
 
   delay(500);
   DBG_OUTPUT_PORT.begin(DBG_OUTPUT_PORT_SPEED);

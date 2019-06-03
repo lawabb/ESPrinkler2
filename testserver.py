@@ -267,7 +267,7 @@ class ESPrinkler2RequestHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 
 
 os.chdir("data-uncompressed")
-PORT = 80
+PORT = 8080
 
 Handler = ESPrinkler2RequestHandler
 
