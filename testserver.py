@@ -20,13 +20,16 @@ zones = [
         'off', 'off', 'off', 'off'
         ]
 
+HOST = "192.168.1.100"  # or use ""
+PORT = 8080
 htime = 0
 ltime = time.time()
-offsetGMT = 0
+offsetGMT = 28800
 config = None
 sched = None
 buttons = None
-host = 'ESPrinkler2'
+host = 'ESPrinkler'
+data_dir = "data-uncompressed"
 
 
 class ESPrinkler2RequestHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
@@ -265,14 +268,11 @@ class ESPrinkler2RequestHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
             else:
                 return SimpleHTTPServer.SimpleHTTPRequestHandler.do_GET(self)
 
-
-os.chdir("data-uncompressed")
-PORT = 8080
-
-Handler = ESPrinkler2RequestHandler
-
-httpd = SocketServer.TCPServer(("", PORT), Handler)
-
-print "serving at port", PORT
-print "serving folder", os.getcwd()
-httpd.serve_forever()
+if  __name__ == "__main__":
+    
+    os.chdir(data_dir)
+    Handler = ESPrinkler2RequestHandler
+    httpd = SocketServer.TCPServer((HOST, PORT), Handler)
+    print "Serving at address %s port %s " % (HOST, PORT)
+    print "Serving folder", os.getcwd()
+    httpd.serve_forever()
