@@ -11,8 +11,10 @@
 */
 
 /* Requirements:
-  Arduino-1.8.3
-  ESP8266/Arduino :Additional Boards Manager URL: http://arduino.esp8266.com/stable/package_esp8266com_index.json
+  Arduino-1.8.5 - this what I used.  Others may be OK
+  ESP8266/Arduino :Current Additional Boards Manager URL: https://github.com/esp8266/esp8266.github.io
+    Version 2.5.2 https://github.com/esp8266/esp8266.github.io/blob/c6ddb5c67bbc11052dcc4d3c872d92c874f97bed/stable/package_esp8266com_index.json
+  ESP8266/Arduino 2.5.2 https://github.com/esp8266/Arduino/releases/tag/2.5.2
   Time 1.5.0 https://github.com/PaulStoffregen/Time
   SimpleTimer https://github.com/jfturcot/SimpleTimer (http://playground.arduino.cc/Code/SimpleTimer)
   NtpClientLib 2.0.5 https://github.com/gmag11/NtpClient

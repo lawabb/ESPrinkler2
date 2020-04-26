@@ -1,29 +1,13 @@
 ESPrinkler2
 ===========
 Arduino/ESP8266 based sprinkler Controller.
-|  This is a fork of the n0bel/ESPrinkler2 project with some small changes to suit my needs.
-|  The main changes are.
-|  1. Addition of a Master relay
-|  2. Removal of SPI (to regain a sutiable pin for master relay)
-|  3. Some redo of main webpage (index.html) for better display on phone
-|  4. Inclusions of some hardware info. Working circuit diagram and Main parts list/supplier/prices.
 -------------------------------------------
 
-.. figure::  docs/Screenshot_20190603-192318.png
-   :alt: ESPrinkler2 Collage
-   
----------------------------------------------------
-   
 .. figure:: images/esprinkler.jpg
-   :alt: 
-   
----------------------------------------------------
-  
+   :alt: ESPrinkler2 Collage
+
+The folowing is from n0bel/ESPrinkler2. The code here has some small changes to incorporate a Master Solenoid control.
 See https://youtu.be/FuQVv96XGbQ for a video of my hardware.
-
-The information below is copied from n0bel/ESPrinkler2 and has the information needed to get the project working.
-
---------------------------------------------------------------------------------------------------------
 
 This is a totally rewritten second version of
 https://github.com/n0bel/ESPrinkler Consider that code now totally
@@ -57,14 +41,16 @@ Hardware
 
 Software
 ~~~~~~~~
--  Arduino-1.8.3
--  ESP8266/Arduino :Additional Boards Manager URL:
-   http://arduino.esp8266.com/stable/package\_esp8266com\_index.json
+-  Arduino-1.8.5
+-  ESP8266/Arduino :Current Additional Boards Manager URL:
+   https://github.com/esp8266/esp8266.github.io
+-  Version 2.5.2 https://github.com/esp8266/esp8266.github.io/blob/c6ddb5c67bbc11052dcc4d3c872d92c874f97bed/stable/package_esp8266com_index.json
+-  ESP8266/Arduino **2.5.2**  https://github.com/esp8266/Arduino/releases/tag/2.5.2
 -  Time 1.5.0 https://github.com/PaulStoffregen/Time
 -  SimpleTimer https://github.com/jfturcot/SimpleTimer
    (http://playground.arduino.cc/Code/SimpleTimer)
 -  NtpClientLib 2.0.5 https://github.com/gmag11/NtpClient
--  ArduinoJson 5.6.7 https://github.com/bblanchon/ArduinoJson
+-  ArduinoJson **5.6.7** https://github.com/bblanchon/ArduinoJson
    (https://bblanchon.github.io/ArduinoJson/)
 -  U8G2Lib 2.13.5 https://github.com/olikraus/u8g2
 -  orbitalair-arduino-rtc-pcf8563
